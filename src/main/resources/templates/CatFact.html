@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head> 
+    <title>Daily Fun Fact about cats</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>CatFact</h1>
+    <form action="#" th:action="@{/CatFact}" th:object="${CatFact}" method="post">
+    	<p>Id: <input type="text" th:field="*{catFact}" /></p>
+    </form>
+</body>
+</html>
