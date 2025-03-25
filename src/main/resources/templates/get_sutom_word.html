@@ -6,8 +6,9 @@
 </head>
 <body>
 	<h1>Sutom</h1>
-    <form action="#" th:action="@{/get_sutom_word}" th:object="${Sutom}" method="post">
-    	<p>Id: <input type="text" th:field="*{anonymizedWord}" /></p>
+    <p th:text="|Word of the day : ${hiddenWord}|"></p>
+    <form action="#" th:action="@{/sutom}" th:object="${SutomInput}" method="post">
+        <p>Propose a word: <input type="text" th:field="*{proposedWord}" /></p>
         <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
     </form>
 </body>

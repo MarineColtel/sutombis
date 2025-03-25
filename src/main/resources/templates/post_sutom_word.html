@@ -1,12 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://www.thymeleaf.org">
 <head> 
-    <title>Find Sutom word of the day</title>
+    <title>Propositions of the daily word</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-	<h1>Sutom word</h1>
-    <p th:text="${}" />
-    <a href="/post_sutom_word">Get another word</a>
+	<h1>Your proposition</h1>
+    <form action="#" th:action="@{/sutom}" th:object="${SutomInput}" method="post">
+        <p th:text="${}"></p>
+        <a href="/sutom">Propose another word</a>
+    </form>
 </body>
 </html>

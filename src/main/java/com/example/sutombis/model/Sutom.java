@@ -1,11 +1,13 @@
 package com.example.sutombis.model;
 
+import org.springframework.web.client.RestTemplate;
+
 public class Sutom {
 
     private long id;
-    private String name;
+    public String name;
     private String categorie;
-    private String anonymizedWord;
+    public String anonymizedWord;
 
     public long getId() {
         return id;
@@ -39,15 +41,48 @@ public class Sutom {
         this.categorie = categorie;
     }
 
+    // Call trouve-mot api
+    public void getDailyWord() {
+        String url = "https://trouve-mot.fr/api";
+        RestTemplate restTemplate = new RestTemplate();
+        
+        // Call the api
+        Sutom response = restTemplate.getForObject(url + "/daily", Sutom.class);
+        
+        // Fetch only the name in the api response
+        this.name = response.getName();
+    }
+
     // Anonymize the daily word and let only the first letter visible
-    public String anonymizeWord(String word) {
-        Integer length = word.length();
+    public void anonymizeWord(String proposedWord) {
+        Integer length = this.name.length();
 
-        String anonymizedWord = String.format("%-" + length + "s", word.charAt(0)).replace(" ", " _");
+        if (proposedWord.isEmpty()) {
+            this.anonymizedWord = String.format("%-" + length + "s", this.name.charAt(0)).replace(" ", " _");
+        }
 
-        this.anonymizedWord = anonymizedWord;
+        for (Integer i=0; i <= length; i++) {
+            if (this.name.charAt(i) == proposedWord.charAt(i)) {
+                this.anonymizedWord += proposedWord.charAt(i);
+            } else {
+                this.anonymizedWord += " _";
+            }
+        }
+    }
 
-        return this.anonymizedWord;
+    // Check if the word provide by the user is equal to the world of the day
+    public Boolean checkWord(String proposedWord) {
+        // Logic to check each letter
+        Integer length = this.name.length();
+
+        for (Integer i=0; i < length; i++) {
+            if (this.name.charAt(i) != proposedWord.charAt(i)) {
+                return false;
+            }
+        }
+
+        return true;
+        
     }
 
 }
