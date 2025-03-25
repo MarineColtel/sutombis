@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head> 
+    <title>Find Sutom word of the day</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>Sutom</h1>
+    <form action="#" th:action="@{/get_sutom_word}" th:object="${Sutom}" method="post">
+    	<p>Word of the day <input type="text" th:field="*{word}" /></p>
+    </form>
+</body>
+</html>
