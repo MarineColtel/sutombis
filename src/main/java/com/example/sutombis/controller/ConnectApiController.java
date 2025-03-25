@@ -18,6 +18,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,26 +55,19 @@ public class ConnectApiController {
         
         Sutom response = restTemplate.getForObject(url + "/daily", Sutom.class);
         
-        return response.getName();
+        String word = response.getName();
+        response.anonymizeWord(word);
+
+        return "get_sutom_word";
+
     }
 
-
-
-    //  @GetMapping("/get_sutom_word")
-    // public String getRandomWord(Model model) throws IOException {
-
-    //     String url = "https://wordsapiv1.p.rapidapi.com/words/lovely/synonyms";
-
-    //     HttpHeaders headers = new HttpHeaders();
-    //     headers.add("x-rapidapi-host", "wordsapiv1.p.rapidapi.com");
-    //     headers.add("x-api-key", "66415cdb44msh4c25cde97367049p176f34jsnd9aca8060cfd");
+    @PostMapping("/get_sutom_word")
+    public String sutomSubmit(Model model) {
         
-    //     HttpEntity<Object> entity = new HttpEntity<Object>(headers);
-    //     RestTemplate restTemplate = new RestTemplate();
-    //     ResponseEntity<Sutom> response = restTemplate.exchange(url, HttpMethod.GET, entity, Sutom.class);
-        
-    //     return response.toString();
-    // }
+        return "post_sutom_word";
+    }
+
     
     
 }
