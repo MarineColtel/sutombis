@@ -8,7 +8,7 @@
 	<h1>Sutom</h1>
     <p th:text="|Word of the day : ${hiddenWord}|"></p>
     <form action="#" th:action="@{/sutom}" th:object="${SutomInput}" method="post">
-        <p>Propose a word: <input type="text" th:field="*{proposedWord}" /></p>
+        <p>Propose a word: <input type="text" th:field="*{proposedWord}" th:minlength="${length}" th:maxlength="${length}" required/></p>
         <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
     </form>
 </body>

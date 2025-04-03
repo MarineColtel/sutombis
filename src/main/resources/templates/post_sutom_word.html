@@ -5,10 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-	<h1>Your proposition</h1>
-    <form action="#" th:action="@{/sutom}" th:object="${SutomInput}" method="post">
-        <p th:text="${}"></p>
-        <a href="/sutom">Propose another word</a>
-    </form>
+	<h1>Your proposition</h1> : <p th:text="|${SutomInput.proposedWord}|"></p>
+    <a href="/sutom">Propose another word</a>
 </body>
 </html>

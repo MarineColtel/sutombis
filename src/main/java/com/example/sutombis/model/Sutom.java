@@ -1,13 +1,16 @@
 package com.example.sutombis.model;
 
+import java.util.Set;
+
 import org.springframework.web.client.RestTemplate;
 
 public class Sutom {
 
     private long id;
     public String name;
-    private String categorie;
-    public String anonymizedWord;
+    public Integer length;
+    public String categorie;
+    public String hiddenWord;
 
     public long getId() {
         return id;
@@ -25,16 +28,24 @@ public class Sutom {
         this.name = name;
     }
 
+    public Integer getLength() {
+        return length;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
+    }
+
     public String getCategorie() {
         return categorie;
     }
 
-    public String getAnonymizedWord() {
-        return anonymizedWord;
+    public String getHiddenWord() {
+        return hiddenWord;
     }
 
-    public void setAnonymizedWord(String anonymizedWord) {
-        this.anonymizedWord = anonymizedWord;
+    public void setHiddenWord(String hiddenWord) {
+        this.hiddenWord = hiddenWord;
     }
 
     public void setCategorie(String categorie) {
@@ -51,21 +62,27 @@ public class Sutom {
         
         // Fetch only the name in the api response
         this.name = response.getName();
+        this.length = this.name.length();
     }
 
-    // Anonymize the daily word and let only the first letter visible
-    public void anonymizeWord(String proposedWord) {
-        Integer length = this.name.length();
+    // Hide the daily word and let only the first letter visible
+    public void hideWord() {;
+        this.hiddenWord = String.format("%-" + this.length + "s", this.name.charAt(0)).replace(" ", "_");
+    }
 
-        if (proposedWord.isEmpty()) {
-            this.anonymizedWord = String.format("%-" + length + "s", this.name.charAt(0)).replace(" ", " _");
-        }
+    // Hide the daily word's letters that are not found yet by the user
+    public void hideLettersNotFound(String proposedWord) {
+        // si charAt() != " _" alors on garde la lettre
+        // this.hiddenWord = ""; // plus besoin de ça
 
-        for (Integer i=0; i <= length; i++) {
-            if (this.name.charAt(i) == proposedWord.charAt(i)) {
-                this.anonymizedWord += proposedWord.charAt(i);
-            } else {
-                this.anonymizedWord += " _";
+        Set<Character> listOfLetters = Set.of();
+
+        for (Integer i=0; i < this.length ; i++) {
+            Character hiddenLetter = this.hiddenWord.charAt(i);
+            String stringLetter = hiddenLetter.toString();
+            if (this.name.charAt(i) == proposedWord.charAt(i) && stringLetter == "_") {
+                hiddenLetter = proposedWord.charAt(i);
+                listOfLetters.add(hiddenLetter);
             }
         }
     }
@@ -73,16 +90,13 @@ public class Sutom {
     // Check if the word provide by the user is equal to the world of the day
     public Boolean checkWord(String proposedWord) {
         // Logic to check each letter
-        Integer length = this.name.length();
 
-        for (Integer i=0; i < length; i++) {
+        for (Integer i=0; i < this.length; i++) {
             if (this.name.charAt(i) != proposedWord.charAt(i)) {
                 return false;
             }
         }
-
         return true;
-        
     }
 
 }

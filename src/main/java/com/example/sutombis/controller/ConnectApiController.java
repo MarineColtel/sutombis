@@ -32,21 +32,25 @@ public class ConnectApiController {
 
     // Connecting to Trouve-mot api
 
-    // Create new Sutom object and get the word of the day
+    // Create new Sutom and new SutomInput objects
     Sutom sutomOfTheDay = new Sutom();
+    SutomInput sutomInput = new SutomInput();
 
     @GetMapping("/sutom")
     public String getRandomWord(Model model) {
 
         // Get the word of the day
-        sutomOfTheDay.getDailyWord();
-        sutomOfTheDay.anonymizeWord();
+        if (sutomOfTheDay.hiddenWord == null) {
+            sutomOfTheDay.getDailyWord();
+            sutomOfTheDay.hideWord();
+        }
+    
 
-        // 
-        model.addAttribute("hiddenWord", sutomOfTheDay.anonymizedWord);
+        // Display the hidden word
+        model.addAttribute("hiddenWord", sutomOfTheDay.hiddenWord);
 
         // Allow the user to enter a word
-        model.addAttribute("SutomInput", new SutomInput());
+        model.addAttribute("SutomInput", sutomInput);
 
         // Return the html page (with the name of the html file)
         return "get_sutom_word";
@@ -57,10 +61,10 @@ public class ConnectApiController {
     public String sutomSubmit(@ModelAttribute SutomInput SutomInput, Model model) {
         model.addAttribute("SutomInput", SutomInput);
 
-        Boolean check = sutomOfTheDay.checkWord("proposedWord");
+        Boolean check = sutomOfTheDay.checkWord(SutomInput.getProposedWord());
 
-        if (check = false) {
-            sutomOfTheDay.anonymizeWord();
+        if (check == false) {
+            sutomOfTheDay.hideLettersNotFound(SutomInput.getProposedWord());
         }
 
         return "post_sutom_word";

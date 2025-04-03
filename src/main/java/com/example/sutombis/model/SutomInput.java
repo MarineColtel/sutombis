@@ -2,7 +2,7 @@ package com.example.sutombis.model;
 
 public class SutomInput {
 
-    private String proposedWord;
+    public String proposedWord;
 
     public String getProposedWord() {
         return proposedWord;
