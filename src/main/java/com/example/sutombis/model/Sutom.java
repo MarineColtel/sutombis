@@ -1,6 +1,6 @@
 package com.example.sutombis.model;
 
-import java.util.Set;
+import java.util.Arrays;
 
 import org.springframework.web.client.RestTemplate;
 
@@ -11,6 +11,7 @@ public class Sutom {
     public Integer length;
     public String categorie;
     public String hiddenWord;
+    public Boolean[] goodLetters;
 
     public long getId() {
         return id;
@@ -52,6 +53,14 @@ public class Sutom {
         this.categorie = categorie;
     }
 
+    public Boolean[] getGoodLetters() {
+        return goodLetters;
+    }
+
+    public void setGoodLetters(Boolean[] goodLetters) {
+        this.goodLetters = goodLetters;
+    }
+
     // Call trouve-mot api
     public void getDailyWord() {
         String url = "https://trouve-mot.fr/api";
@@ -63,6 +72,11 @@ public class Sutom {
         // Fetch only the name in the api response
         this.name = response.getName();
         this.length = this.name.length();
+
+        // Initialize goodLetters table
+        this.goodLetters = new Boolean[this.name.length()];
+        Arrays.fill(this.goodLetters, false);
+        this.goodLetters[0] = true;
     }
 
     // Hide the daily word and let only the first letter visible
@@ -70,21 +84,36 @@ public class Sutom {
         this.hiddenWord = String.format("%-" + this.length + "s", this.name.charAt(0)).replace(" ", "_");
     }
 
-    // Hide the daily word's letters that are not found yet by the user
+    // Check which proposedWord's letters are good
     public void hideLettersNotFound(String proposedWord) {
-        // si charAt() != " _" alors on garde la lettre
-        // this.hiddenWord = ""; // plus besoin de ça
 
-        Set<Character> listOfLetters = Set.of();
+        Boolean[] table = this.goodLetters;
 
         for (Integer i=0; i < this.length ; i++) {
-            Character hiddenLetter = this.hiddenWord.charAt(i);
-            String stringLetter = hiddenLetter.toString();
-            if (this.name.charAt(i) == proposedWord.charAt(i) && stringLetter == "_") {
-                hiddenLetter = proposedWord.charAt(i);
-                listOfLetters.add(hiddenLetter);
+            
+            if (proposedWord.charAt(i) == this.name.charAt(i)) {
+                table[i] = true;
             }
         }
+
+        this.goodLetters = table;
+        newHiddenWord(proposedWord);
+    }
+
+    // Update hiddenWord
+    private void newHiddenWord(String proposedWord) {
+
+        String newHiddenWord = "";
+
+        for (Integer i=0; i < this.length ; i++) {
+
+            if (this.goodLetters[i]) {
+                newHiddenWord += this.name.charAt(i);
+            } else {
+                newHiddenWord += "_";
+            }
+        }
+        this.hiddenWord = newHiddenWord;
     }
 
     // Check if the word provide by the user is equal to the world of the day
